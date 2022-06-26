@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import redempt.redlib.commandmanager.CommandHook;
 import redempt.redlib.commandmanager.CommandParser;
+import redempt.redlib.misc.ChatPrompt;
 import redempt.redlib.misc.FormatUtils;
 import redempt.redlib.sql.SQLHelper;
 
@@ -70,6 +71,10 @@ public class CommandHandler {
 
     @CommandHook("sethome")
     public void sethome(Player player, String name) {
+        if (name.equals("all")) {
+            player.sendMessage(FormatUtils.color("&cThis name is reserved."));
+            return;
+        }
         List<String> homes = getHomeNames(player);
         int allowed = getAllowedHomes(player);
         if (!player.isOp() && homes.size() >= allowed) {
@@ -84,6 +89,15 @@ public class CommandHandler {
 
     @CommandHook("delhome")
     public void delhome(Player player, String name) {
+        if (name.equals("all")) {
+            ChatPrompt.prompt(player, FormatUtils.color("&cType 'yes' to delete all homes, or anything else to cancel."), false, response -> {
+                if (response.equals("yes")) {
+                    plugin.sql.execute("DELETE FROM homes WHERE uuid=?;", player.getUniqueId());
+                    player.sendMessage(FormatUtils.color("&aDeleted all homes."));
+                }
+            });
+            return;
+        }
         List<String> homes = getHomeNames(player);
         if (!homes.contains(name)) {
             player.sendMessage(FormatUtils.color("&cThis home does not exist."));
