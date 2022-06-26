@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
+import redempt.redlib.commandmanager.ArgType;
 import redempt.redlib.commandmanager.CommandHook;
 import redempt.redlib.commandmanager.CommandParser;
 import redempt.redlib.misc.ChatPrompt;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CommandHandler {
 
@@ -22,7 +24,13 @@ public class CommandHandler {
 
     public CommandHandler(Homes plugin) {
         this.plugin = plugin;
+        ArgType<String> homeType = new ArgType<>("home", s -> s)
+                .tabStream(sender -> {
+                    if (!(sender instanceof Player)) return Stream.empty();
+                    return getHomeNames((Player) sender).stream();
+                });
         new CommandParser(plugin.getResource("command.rdcml"))
+                .setArgTypes(homeType)
                 .parse().register("homes", this);
     }
 

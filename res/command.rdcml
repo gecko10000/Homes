@@ -1,4 +1,4 @@
-home string:name?(home) {
+home home:name?(home) {
     permission homes.command.home
     help Teleport to a home
     user player
@@ -19,7 +19,7 @@ sethome string:name?(home) {
     hook sethome
 }
 
-delhome string:name?(home) {
+delhome home:name?(home) {
     permission homes.command.delhome
     help Delete a home
     user player
