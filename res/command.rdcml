@@ -1,0 +1,27 @@
+home string:name?(home) {
+    permission homes.command.home
+    help Teleport to a home
+    user player
+    hook home
+}
+
+homes {
+    permission homes.command.homes
+    help List your homes
+    user player
+    hook homes
+}
+
+sethome string:name?(home) {
+    permission homes.command.sethome
+    help Set a home
+    user player
+    hook sethome
+}
+
+delhome string:name?(home) {
+    permission homes.command.delhome
+    help Delete a home
+    user player
+    hook delhome
+}
