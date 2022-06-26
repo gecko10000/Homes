@@ -11,7 +11,7 @@ public class Homes extends JavaPlugin {
 
     protected SQLHelper sql;
 
-    public void setupDatabase() {
+    private void setupDatabase() {
         File dataFolder = this.getDataFolder();
         dataFolder.mkdir();
         Connection connection = SQLHelper.openSQLite(dataFolder.toPath().resolve("homes.db"));
