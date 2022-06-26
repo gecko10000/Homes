@@ -21,6 +21,8 @@ public class Homes extends JavaPlugin {
                 "x DOUBLE," +
                 "y DOUBLE," +
                 "z DOUBLE," +
+                "pitch DOUBLE," +
+                "yaw DOUBLE," +
                 "uuid TEXT," +
                 "name TEXT);");
         sql.setCommitInterval(20 * 60 * 5);

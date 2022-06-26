@@ -27,19 +27,19 @@ public class CommandHandler {
 
     @CommandHook("home")
     public void home(Player player, String name) {
-        SQLHelper.Results coords = plugin.sql.queryResults("SELECT world, x, y, z FROM homes WHERE uuid=? AND name=?;", player.getUniqueId().toString(), name);
+        SQLHelper.Results coords = plugin.sql.queryResults("SELECT world, x, y, z, pitch, yaw FROM homes WHERE uuid=? AND name=?;", player.getUniqueId().toString(), name);
         if (coords.isEmpty()) {
             player.sendMessage(FormatUtils.color("&cThis home does not exist."));
             return;
         }
         String worldUUID = coords.getString(1);
-        double x = coords.get(2), y = coords.get(3), z = coords.get(4);
+        double x = coords.get(2), y = coords.get(3), z = coords.get(4), pitch = coords.get(5), yaw = coords.get(6);
         World world = Bukkit.getWorld(UUID.fromString(worldUUID));
         if (world == null) {
             player.sendMessage(FormatUtils.color("&cThis world does not exist anymore."));
             return;
         }
-        player.teleport(new Location(world, x, y, z));
+        player.teleport(new Location(world, x, y, z, (float) yaw, (float) pitch));
         player.sendMessage(FormatUtils.color("&aTeleported to home " + name + "."));
     }
 
@@ -77,8 +77,8 @@ public class CommandHandler {
             return;
         }
         Location loc = player.getLocation();
-        plugin.sql.execute(homes.contains(name) ? "UPDATE homes SET world=?, x=?, y=?, z=? WHERE uuid=? AND name=?;" : "INSERT INTO homes VALUES (?, ?, ?, ?, ?, ?);",
-                loc.getWorld().getUID().toString(), loc.getX(), loc.getY(), loc.getZ(), player.getUniqueId().toString(), name);
+        plugin.sql.execute(homes.contains(name) ? "UPDATE homes SET world=?, x=?, y=?, z=?, pitch=?, yaw=? WHERE uuid=? AND name=?;" : "INSERT INTO homes VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+                loc.getWorld().getUID().toString(), loc.getX(), loc.getY(), loc.getZ(), loc.getPitch(), loc.getYaw(), player.getUniqueId().toString(), name);
         player.sendMessage(FormatUtils.color("&aSet home " + name + " at " + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ() + " in " + loc.getWorld().getName() + "."));
     }
 
