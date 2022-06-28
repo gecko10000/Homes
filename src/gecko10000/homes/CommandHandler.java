@@ -84,10 +84,12 @@ public class CommandHandler {
             return;
         }
         List<String> homes = getHomeNames(player);
-        int allowed = getAllowedHomes(player);
-        if (!player.isOp() && homes.size() >= allowed) {
-            player.sendMessage(FormatUtils.color("&cYou can only set " + allowed + " homes."));
-            return;
+        if (!homes.contains(name)) {
+            int allowed = getAllowedHomes(player);
+            if (!player.isOp() && homes.size() >= allowed) {
+                player.sendMessage(FormatUtils.color("&cYou can only set " + allowed + " homes."));
+                return;
+            }
         }
         Location loc = player.getLocation();
         plugin.sql.execute(homes.contains(name) ? "UPDATE homes SET world=?, x=?, y=?, z=?, pitch=?, yaw=? WHERE uuid=? AND name=?;" : "INSERT INTO homes VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
